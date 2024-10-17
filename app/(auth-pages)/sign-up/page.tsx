@@ -1,3 +1,4 @@
+"use client";
 import { signUpAction } from "@/app/actions";
 import { FormMessage, Message } from "@/components/form-message";
 import { SubmitButton } from "@/components/submit-button";
@@ -5,6 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { SmtpMessage } from "../smtp-message";
+import { createClient } from "@/utils/supabase/client";
+import { Button } from "@/components/ui/button";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 
 export default function Signup({ searchParams }: { searchParams: Message }) {
   if ("message" in searchParams) {
@@ -14,6 +18,29 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
       </div>
     );
   }
+  const supabase = createClient();
+  const handleGitHubSignIn = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`, // Use absolute URL
+      },
+    });
+    if (error) {
+      console.error("GitHub sign-in error:", error.message);
+    }
+  };
+  const handleGoogleSignIn = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`, // Use absolute URL
+      },
+    });
+    if (error) {
+      console.error("google sign-in error:", error.message);
+    }
+  };
 
   return (
     <>
@@ -39,6 +66,14 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
           <SubmitButton formAction={signUpAction} pendingText="Signing up...">
             Sign up
           </SubmitButton>
+          <div className="flex flex-col gap-2 [&>input]:mb-3">
+            <Button className="gap-2" onClick={handleGitHubSignIn}>
+              Sign up with Github <FaGithub size={20} />
+            </Button>
+            <Button className="gap-2" onClick={handleGoogleSignIn}>
+              Sign up with Google <FaGoogle size={20} />
+            </Button>
+          </div>
           <FormMessage message={searchParams} />
         </div>
       </form>

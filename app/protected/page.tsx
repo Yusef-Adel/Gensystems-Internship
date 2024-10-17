@@ -1,8 +1,9 @@
 import FetchDataSteps from "@/components/tutorial/fetch-data-steps";
+import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
 import { InfoIcon } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
-
 export default async function ProtectedPage() {
   const supabase = createClient();
 
@@ -13,9 +14,13 @@ export default async function ProtectedPage() {
   if (!user) {
     return redirect("/sign-in");
   }
-
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
+      
+      
+      <Link className="text-center" href={'/notes'} >
+      <Button>Go to Orders</Button>
+      </Link>
       <div className="w-full">
         <div className="bg-accent text-sm p-3 px-5 rounded-md text-foreground flex gap-3 items-center">
           <InfoIcon size="16" strokeWidth={2} />
