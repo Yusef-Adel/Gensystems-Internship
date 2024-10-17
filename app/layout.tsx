@@ -1,4 +1,4 @@
-import DeployButton from "@/components/deploy-button";
+
 import { EnvVarWarning } from "@/components/env-var-warning";
 import HeaderAuth from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
@@ -7,14 +7,14 @@ import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
-
+import SupabaseLogo from "@/components/supabase-logo";
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "InternShip",
+  title: "Gensystems Internship With Supabase",
   description: "The fastest way to build apps with Next.js and Supabase",
 };
 
@@ -37,9 +37,8 @@ export default function RootLayout({
               <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
                 <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
                   <div className="flex gap-5 items-center font-semibold">
-                    <Link href={"/"}>Next.js Supabase Starter</Link>
+                    <Link className="flex items-center gap-2" href={"/"}>Gensystems Internship With<SupabaseLogo/> </Link>
                     <div className="flex items-center gap-2">
-                      <DeployButton />
                     </div>
                   </div>
                   {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
