@@ -69,7 +69,7 @@ export default function Login({ searchParams }: { searchParams: Message }) {
             Sign in with Github <FaGithub  size={20} />
           </Button>
           <Button className="gap-2" onClick={handleGoogleSignIn}>
-            Sign in with Github <FaGoogle size={20} />
+            Sign in with Google <FaGoogle size={20} />
           </Button>
         </div>
         <FormMessage message={searchParams} />
