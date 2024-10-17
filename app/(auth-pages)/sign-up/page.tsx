@@ -8,7 +8,7 @@ import Link from "next/link";
 import { SmtpMessage } from "../smtp-message";
 import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
-import { FaGithub, FaGoogle } from "react-icons/fa";
+import { FaDiscord, FaGithub, FaGoogle } from "react-icons/fa";
 import { useState } from "react";
 
 export default function Signup({ searchParams }: { searchParams: Message }) {
@@ -44,8 +44,21 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
       console.error("google sign-in error:", error.message);
     }
   };
+  const handleDiscordSignIn = async () => {
+    setloadingDiscord(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "discord",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`, // Use absolute URL
+      },
+    });
+    if (error) {
+      console.error("discord sign-in error:", error.message);
+    }
+  };
   const [loadingGithub, setloadingGithub] = useState(false);
   const [loadingGoogle, setloadingGoogle] = useState(false);
+  const [loadingDiscord, setloadingDiscord] = useState(false);
   return (
     <>
       <form className="flex flex-col min-w-64 max-w-64 mx-auto">
@@ -72,12 +85,16 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
           </SubmitButton>
           <div className="flex flex-col gap-2">
             <Button className="gap-2" onClick={handleGitHubSignIn}>
-              {loadingGithub ? "Authencticating..." : `Signup With Github`}
+              {loadingGithub ? "Authencticating..." : `Signup With Github`} 
               <FaGithub size={20} />
             </Button>
             <Button className="gap-2" onClick={handleGoogleSignIn}>
               {loadingGoogle ? "Authencticating..." : `Signup With Google`}
               <FaGoogle size={20} />
+              </Button>
+            <Button className="gap-2" onClick={handleDiscordSignIn}>
+              {loadingDiscord ? "Authencticating..." : `Signup With Discord`}
+              <FaDiscord size={20} />
             </Button>
           </div>
           <FormMessage message={searchParams} />

@@ -7,12 +7,13 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
-import { FaGithub } from "react-icons/fa";
+import { FaDiscord, FaGithub } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import { useState } from "react";
 export default function Login({ searchParams }: { searchParams: Message }) {
   const [loadingGithub,setloadingGithub] = useState(false)
   const [loadingGoogle,setloadingGoogle] = useState(false)
+  const [loadingDiscord,setloadingDiscord] = useState(false)
   const supabase = createClient();
   const handleGitHubSignIn = async () => {
     setloadingGithub(true)
@@ -36,6 +37,18 @@ export default function Login({ searchParams }: { searchParams: Message }) {
     });
     if (error) {
       console.error("google sign-in error:", error.message);
+    }
+  };
+  const handleDiscordSignIn = async () => {
+    setloadingDiscord(true)
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "discord",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`, // Use absolute URL
+      },
+    });
+    if (error) {
+      console.error("discord sign-in error:", error.message);
     }
   };
 
@@ -76,12 +89,15 @@ export default function Login({ searchParams }: { searchParams: Message }) {
           <FormMessage message={searchParams} />
         </div>
       </form>
-      <div className="flex gap-2">
+      <div className="flex flex-col gap-2">
         <Button className="gap-2" onClick={handleGitHubSignIn}>
           {loadingGithub ? 'Authenticating...' : 'Sign in with Github'} <FaGithub size={20} />
         </Button>
         <Button className="gap-2" onClick={handleGoogleSignIn}>
         {loadingGoogle ? 'Authenticating...' : 'Sign in with Google'} <FaGoogle size={20} />
+        </Button>
+        <Button className="gap-2" onClick={handleDiscordSignIn}>
+        {loadingDiscord ? 'Authenticating...' : 'Sign in with Discord'} <FaDiscord size={20} />
         </Button>
       </div>
     </div>
