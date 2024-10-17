@@ -9,6 +9,7 @@ import { SmtpMessage } from "../smtp-message";
 import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { FaGithub, FaGoogle } from "react-icons/fa";
+import { useState } from "react";
 
 export default function Signup({ searchParams }: { searchParams: Message }) {
   if ("message" in searchParams) {
@@ -20,6 +21,7 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
   }
   const supabase = createClient();
   const handleGitHubSignIn = async () => {
+    setloadingGithub(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "github",
       options: {
@@ -31,6 +33,7 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
     }
   };
   const handleGoogleSignIn = async () => {
+    setloadingGoogle(true);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -41,7 +44,8 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
       console.error("google sign-in error:", error.message);
     }
   };
-
+  const [loadingGithub, setloadingGithub] = useState(false);
+  const [loadingGoogle, setloadingGoogle] = useState(false);
   return (
     <>
       <form className="flex flex-col min-w-64 max-w-64 mx-auto">
@@ -66,12 +70,14 @@ export default function Signup({ searchParams }: { searchParams: Message }) {
           <SubmitButton formAction={signUpAction} pendingText="Signing up...">
             Sign up
           </SubmitButton>
-          <div className="flex flex-col gap-2 [&>input]:mb-3">
+          <div className="flex flex-col gap-2">
             <Button className="gap-2" onClick={handleGitHubSignIn}>
-              Sign up with Github <FaGithub size={20} />
+              {loadingGithub ? "Authencticating..." : `Signup With Github`}
+              <FaGithub size={20} />
             </Button>
             <Button className="gap-2" onClick={handleGoogleSignIn}>
-              Sign up with Google <FaGoogle size={20} />
+              {loadingGoogle ? "Authencticating..." : `Signup With Google`}
+              <FaGoogle size={20} />
             </Button>
           </div>
           <FormMessage message={searchParams} />
